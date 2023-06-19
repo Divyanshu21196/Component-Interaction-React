@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useBooksContext from "./hooks/custom-books-contexthook";
 
 function BooksForm(){
 
@@ -6,6 +7,15 @@ function BooksForm(){
     const [authorName,setAuthorName] = useState('');
     const [bookPrice,setBookPrice] = useState(1);
     const DEFAULT_BOOK_QUANTITY = 2;
+
+    const { handleSubmit,booksList ,isFormEditable,editableBookDetail } = useBooksContext();
+
+
+    useEffect(()=>{
+        setBookName(editableBookDetail?.name);
+        setAuthorName(editableBookDetail?.author);
+        setBookPrice(editableBookDetail?.price);
+    },[isFormEditable])
 
 
     const onNameChangeHandler = (event) =>{
@@ -40,11 +50,19 @@ function BooksForm(){
             return
         }
 
-        const obj = {name:bookName,author:authorName,price:bookPrice,quantity:DEFAULT_BOOK_QUANTITY};
-
-        console.log(obj)
+        const find_book_name = (booksList || []).find(book=>book.name == bookName);
+        
+        if(!isFormEditable && find_book_name){
+            alert('Book with this name already exist')
+            return
+        }
+        
+        const obj = {id:booksList.length ? booksList.length+1 : 0,name:bookName,author:authorName,price:bookPrice,quantity:DEFAULT_BOOK_QUANTITY};
+        handleSubmit(obj);
+        setBookName('');
+        setAuthorName('');
+        setBookPrice('');
     }
-
 
     return(
         <div className="position-relative"> 
