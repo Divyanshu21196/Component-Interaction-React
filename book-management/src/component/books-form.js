@@ -8,7 +8,7 @@ function BooksForm(){
     const [bookPrice,setBookPrice] = useState(1);
     const DEFAULT_BOOK_QUANTITY = 2;
 
-    const { handleSubmit,booksList ,isFormEditable,editableBookDetail } = useBooksContext();
+    const { handleSubmit,booksList ,isFormEditable,editableBookDetail,handlerEditSubmit } = useBooksContext();
 
 
     useEffect(()=>{
@@ -56,9 +56,19 @@ function BooksForm(){
             alert('Book with this name already exist')
             return
         }
-        
-        const obj = {id:booksList.length ? booksList.length+1 : 0,name:bookName,author:authorName,price:bookPrice,quantity:DEFAULT_BOOK_QUANTITY};
-        handleSubmit(obj);
+
+        let obj = {}
+
+        if(!isFormEditable){
+
+            obj =   {id:booksList.length ? booksList.length+1 : 0,name:bookName,author:authorName,price:bookPrice,quantity:DEFAULT_BOOK_QUANTITY};        
+            handleSubmit(obj);
+    
+        }else{
+            
+            obj = {id:editableBookDetail?.id,name:bookName,author:authorName,price:bookPrice,quantity:DEFAULT_BOOK_QUANTITY};        
+            handlerEditSubmit(obj);
+        }
         setBookName('');
         setAuthorName('');
         setBookPrice('');

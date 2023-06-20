@@ -48,6 +48,20 @@ function Provider({children}){
         setBookDetail(book_info);
     }
 
+    const handlerEditSubmit = (book_info) =>{
+       
+        const updatedArray = (booksList || []).map((books)=>{
+
+            if(books.id == book_info.id){
+                return {...books,name:book_info.name,author:book_info.author,price:book_info.price}
+            }
+            
+            return books
+        })
+
+        setList(updatedArray);
+    }
+
     const valueToShare = {
         booksList,
         isFormEditable,
@@ -55,7 +69,8 @@ function Provider({children}){
         config:Config,
         handleSubmit ,
         deleteBookHandler ,
-        editBookHandler
+        editBookHandler,
+        handlerEditSubmit
         }
 
 
